@@ -1,0 +1,109 @@
+/* Estilo geral do corpo */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Estilo para o conteúdo da página */
+#content {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    color: #444;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Estilização da lista de contas */
+#account-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#account-list li {
+    background-color: #ffffff;
+    margin: 10px 0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#account-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#account-list li span {
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+}
+
+/* Estilo para o nome */
+#account-list li .name {
+    color: #444;
+    font-weight: bold;
+}
+
+/* Estilo para o saldo */
+#account-list li .balance {
+    color: #28a745; /* Cor verde para saldos */
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Estilo para a navegação */
+nav {
+    background-color: #333;
+    padding: 10px;
+}
+
+.menu {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    padding: 10px;
+}
+
+.menu li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+}
+
+.menu li a:hover {
+    background-color: #575757;
+    border-radius: 4px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #content {
+        padding: 15px;
+    }
+
+    .menu {
+        flex-direction: column;
+    }
+}

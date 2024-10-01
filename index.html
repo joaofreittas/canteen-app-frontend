@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Cantina App</title>
+</head>
+<body>
+
+    <nav>
+        <span class="toggle">☰ Menu</span>
+        <ul class="menu">
+            <li><a href="/index.html" id="home-link">Home</a></li>
+            <li><a href="#">Cadastrar Conta</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <h1>Lista de Contas</h1>
+        <ul id="account-list"></ul> <!-- Lista de contas será exibida aqui -->
+    </div>
+
+
+    
+</body>
+<script src="/js/service.js"></script>
+<script>
+     async function fetchAccounts() {
+        try {
+            const response = await fetch('http://localhost:8080/v1/account');
+            const accounts = await response.json();
+            console.log(accounts);
+
+            const accountList = document.getElementById('account-list');
+
+            accountList.innerHTML = '';
+
+            // Itera sobre as contas e adiciona na lista
+            accounts.forEach(account => {
+                const listItem = document.createElement('li');
+                const accountLink = document.createElement('a');
+                accountLink.href = `./pages/relatorio.html?id=${account.id}`;
+                accountLink.textContent = `${account.owner.name}  R$ ${account.totalBalance}`;
+                listItem.appendChild(accountLink);
+                accountList.appendChild(listItem);
+            });
+        } catch (error) {
+            console.error('erro ao buscar as contas:', error);
+        }
+    }
+
+    // Quando a página "Home" for clicada, chama a função para buscar as contas
+    document.getElementById('home-link').addEventListener('click', (event) => {
+        event.preventDefault(); // Evita o recarregamento da página
+        fetchAccounts(); // Chama a função para carregar as contas
+    });
+
+    // Carrega as contas automaticamente ao carregar a página
+    window.onload = fetchAccounts;
+
+
+
+
+    const toggleButton = document.querySelector('.toggle');
+    const menu = document.querySelector('.menu');
+
+    toggleButton.addEventListener('click', () => {
+        menu.classList.toggle('active');
+    });
+</script>
+</html>

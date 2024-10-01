@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório da Conta</title>
+    <link rel="stylesheet" href="../css/relatorio.css"> <!-- Referência ao CSS externo -->
+</head>
+<body>
+
+    <nav>
+        <span class="toggle">☰ Menu</span>
+        <ul class="menu">
+            <li><a href="/index.html" id="home-link">Home</a></li>
+            <li><a href="#">Cadastrar Conta</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <h1>Relatório da Conta</h1>
+        <div id="account-details">
+            <!-- Informações da conta serão carregadas aqui -->
+        </div>
+    </div>
+
+<script>
+// Função para buscar parâmetros da URL
+function getQueryParameter(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Função para buscar os detalhes da conta
+async function fetchAccountDetails() {
+    const accountId = getQueryParameter('id');
+    if (!accountId) {
+        document.getElementById('account-details').textContent = 'Conta não encontrada';
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/v1/account/${accountId}`);
+        const account = await response.json();
+
+        // Exibe os detalhes da conta
+        const detailsContainer = document.getElementById('account-details');
+        detailsContainer.innerHTML = `
+            <h2>${account.owner.name}</h2>
+            <p><strong>Saldo Total:</strong> R$ ${account.totalBalance}</p>
+            <h3>Compras Recentes:</h3>
+            <ul id="purchases-list">
+                ${account.purchases.map(purchase => `
+                    <li>
+                        Valor: R$ ${purchase.amount} - Data: ${new Date(purchase.purchasedIn).toLocaleDateString()}
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+    } catch (error) {
+        console.error('Erro ao buscar os detalhes da conta:', error);
+        document.getElementById('account-details').textContent = 'Erro ao carregar os detalhes da conta';
+    }
+}
+
+// Carrega os detalhes da conta ao carregar a página
+window.onload = fetchAccountDetails;
+</script>
+
+</body>
+</html>
