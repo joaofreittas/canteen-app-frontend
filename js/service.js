@@ -1,20 +1,29 @@
-const getAccountReport = (accountId) => {
+const API = 'https://coherent-faith-picpay-54f767ac.koyeb.app/v1/account';
 
+const getAllAccounts = async () => {
+    const response = await fetch(API);
+    return await response.json();
 }
 
-const createAccount = (name, amount = 0) => {
+const getAccountReport = async (accountId) => {
+    const response = await fetch(API + `/${accountId}`);
+    return await response.json();
+}
+
+const createAccount = async (name, amount = 0) => {
     
 }
 
-const registerPurchase = (accountId, amount) => {
+const registerPurchase = async (accountId, amount) => {
         
 }
 
-const payBalance = (accountId, amount) => {
+const payBalance = async (accountId, amount) => {
     
 }
 
-export default{ 
+export default { 
+    getAllAccounts,
     getAccountReport, 
     createAccount, 
     registerPurchase, 
