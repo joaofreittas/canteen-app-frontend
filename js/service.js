@@ -15,11 +15,28 @@ const createAccount = async (name, amount = 0) => {
 }
 
 const registerPurchase = async (accountId, amount) => {
+    await fetch(API + `/${accountId}/register-purchase`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            amount: amount
+        })
+    });
         
 }
 
 const payBalance = async (accountId, amount) => {
-    
+    await fetch(API + `/${accountId}/pay-balance`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            amount: amount
+        })
+    });
 }
 
 export default { 

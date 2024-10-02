@@ -8,41 +8,40 @@
 </head>
 <body>
 
-<div id="content">
     <nav>
         <span class="toggle">☰ Menu</span>
         <ul class="menu">
-            <li><a href="/index.html" id="home-link">Home</a></li>
-            <li><a href="#">Cadastrar Conta</a></li>
+            <li><a href="/index.html" id="home-link">Início</a></li>
         </ul>
     </nav>
-    <h1>Relatório da Conta</h1>
-    <button id="pay-balance-btn">Pagar Saldo</button>
-    <button id="register-purchase-btn">Registrar Compra</button>
-    <div id="account-details">
-        <!-- Informações da conta serão carregadas aqui -->
-    </div>
 
-    <div id="pay-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close-pay-modal">&times;</span>
-            <h2>Pagar Saldo</h2>
-            <input type="number" id="pay-amount" placeholder="Insira o valor a pagar" />
-            <button id="confirm-pay-btn">Confirmar</button>
+    <div id="content">
+        <h1>Relatório da Conta</h1>
+        <button id="pay-balance-btn">Pagar Saldo</button>
+        <button id="register-purchase-btn">Registrar Compra</button>
+        <div id="account-details">
+            <!-- Informações da conta serão carregadas aqui -->
+        </div>
+
+        <div id="pay-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-pay-modal">&times;</span>
+                <h2>Pagar Saldo</h2>
+                <input type="number" id="pay-balance-amount" placeholder="Insira o valor a pagar" />
+                <button id="confirm-pay-btn">Confirmar</button>
+            </div>
+        </div>
+
+        <div id="purchase-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-purchase-modal">&times;</span>
+                <h2>Registrar Compra</h2>
+                <input type="number" id="register-purchase-amount" placeholder="Insira o valor da compra" />
+                <button id="confirm-purchase-btn">Confirmar</button>
+            </div>
         </div>
     </div>
-
-    <!-- Modal para Registrar Compra -->
-    <div id="purchase-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close-purchase-modal">&times;</span>
-            <h2>Registrar Compra</h2>
-            <input type="number" id="purchase-amount" placeholder="Insira o valor da compra" />
-            <button id="confirm-purchase-btn">Confirmar</button>
-        </div>
-    </div>
-
-</div>
+    
 <script type="module" src="../js/relatorio.js"></script>
 </body>
 </html>

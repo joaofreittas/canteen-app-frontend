@@ -14,6 +14,10 @@ async function fetchAccountDetails() {
 
     try {
         const account = await apiService.getAccountReport(accountId);
+        const purchases = account.purchases;
+        purchases.map(purchase => {
+            purchase.purchasedIn = formatDateToBrazilian(purchase.purchasedIn);
+        });
 
         const detailsContainer = document.getElementById('account-details');
         detailsContainer.innerHTML = `
@@ -23,7 +27,7 @@ async function fetchAccountDetails() {
             <ul id="purchases-list">
                 ${account.purchases.map(purchase => `
                     <li>
-                        Valor: R$ ${purchase.amount} - Data: ${new Date(purchase.purchasedIn).toLocaleDateString()}
+                        Valor: R$ ${purchase.amount} - Data: ${purchase.purchasedIn}
                     </li>
                 `).join('')}
             </ul>
@@ -34,63 +38,48 @@ async function fetchAccountDetails() {
     }
 }
 
-// Função para chamar a API PATCH para pagar saldo ou registrar compra
-async function patchAccountOperation(accountId, amount, operation) {
-    const url = `https://api.exemplo.com/contas/${accountId}/${operation}`;
-    
-    const data = {
-        amount: amount
-    };
-
+async function payBalance(accountId, amount, operation) {
     try {
-        const response = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-            alert(`${operation === 'pagar' ? 'Saldo pago' : 'Compra registrada'} com sucesso!`);
-            window.location.reload();  // Atualiza a página para refletir as mudanças
-        } else {
-            alert('Erro ao realizar a operação.');
-        }
+        await apiService.payBalance(accountId, amount);
+        alert('Saldo pago com sucesso!');
+        window.location.reload();
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('erro ao pagar saldo:', error);
         alert('Erro ao realizar a operação.');
     }
 }
 
-// Função para abrir e fechar modais
-function setupModal(modalId, closeModalId, confirmBtnId, operation) {
+async function registerPurchase(accountId, amount, operation) {
+    try {
+        await apiService.registerPurchase(accountId, amount);
+        alert('Compra registrada com sucesso!');
+        window.location.reload();
+    } catch (error) {
+        console.error('erro ao registrar compra:', error);
+        alert('Erro ao realizar a operação.');
+    }
+}
+
+function setupPayBalanceModal(modalId, closeModalId, confirmBtnId, operation) {
     const modal = document.getElementById(modalId);
     const closeModal = document.getElementById(closeModalId);
     const confirmBtn = document.getElementById(confirmBtnId);
 
-    console.log(operation);
-    console.log(document.getElementById(`${operation}-btn`));
-
-    // Abre o modal
     document.getElementById(`${operation}-btn`).onclick = () => {
         modal.style.display = 'block';
     };
 
-    // Fecha o modal
     closeModal.onclick = () => {
         modal.style.display = 'none';
     };
 
-    // Confirma a operação
     confirmBtn.onclick = () => {
         const accountId = getQueryParameter('id');
         const amount = document.getElementById(`${operation}-amount`).value;
-        patchAccountOperation(accountId, parseFloat(amount), operation);
+        payBalance(accountId, parseFloat(amount), operation);
         modal.style.display = 'none';
     };
 
-    // Fecha o modal se clicar fora do conteúdo
     window.onclick = (event) => {
         if (event.target === modal) {
             modal.style.display = 'none';
@@ -98,11 +87,49 @@ function setupModal(modalId, closeModalId, confirmBtnId, operation) {
     };
 }
 
-// Carregar detalhes da conta ao abrir a página
+function setupRegisterPurchaseModal(modalId, closeModalId, confirmBtnId, operation) {
+    const modal = document.getElementById(modalId);
+    const closeModal = document.getElementById(closeModalId);
+    const confirmBtn = document.getElementById(confirmBtnId);
+
+    document.getElementById(`${operation}-btn`).onclick = () => {
+        modal.style.display = 'block';
+    };
+
+    closeModal.onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    confirmBtn.onclick = () => {
+        const accountId = getQueryParameter('id');
+        const amount = document.getElementById(`${operation}-amount`).value;
+        registerPurchase(accountId, parseFloat(amount), operation);
+        modal.style.display = 'none';
+    };
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+}
+
+function formatDateToBrazilian(dateString) {
+    const date = new Date(dateString);
+
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+
 window.onload = () => {
     fetchAccountDetails();
 
-    // Configurar modais
-    setupModal('pay-modal', 'close-pay-modal', 'confirm-pay-btn', 'pay-balance');
-    setupModal('purchase-modal', 'close-purchase-modal', 'confirm-purchase-btn', 'register-purchase');
+    setupPayBalanceModal('pay-modal', 'close-pay-modal', 'confirm-pay-btn', 'pay-balance');
+    setupRegisterPurchaseModal('purchase-modal', 'close-purchase-modal', 'confirm-purchase-btn', 'register-purchase');
 };
